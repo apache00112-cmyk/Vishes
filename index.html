@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vishes — CRMP Collection • Amazing RP</title>
+  <meta name="description" content="Сборка для CRMP (Amazing RP): стабильность, FPS, визуал, удобная установка. Поддержи разработку донатом и скачай архив." />
+
+  <style>
+    :root{
+      --bg:#07080a;
+      --panel:#0e0f12;
+      --panel2:#0a0b0e;
+      --text:#f3f4f6;
+      --muted:#b8bcc6;
+      --line:rgba(255,255,255,.10);
+
+      --red:#ff3b30;
+      --amber:#ffb020;
+      --steel:#9aa3b2;
+
+      --shadow: 0 18px 60px rgba(0,0,0,.65);
+      --radius: 18px;
+
+      --glow-red: 0 0 0 1px rgba(255,59,48,.22), 0 18px 60px rgba(255,59,48,.12);
+      --glow-amber: 0 0 0 1px rgba(255,176,32,.20), 0 18px 60px rgba(255,176,32,.10);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background: var(--bg);
+      overflow-x:hidden;
+    }
+
+    /* ====== BACKDROP (огонь/дым/металл) ====== */
+    .backdrop{
+      position:fixed; inset:-40px;
+      z-index:-2;
+      background:
+        radial-gradient(1000px 600px at 20% 20%, rgba(255,176,32,.18), transparent 60%),
+        radial-gradient(1000px 700px at 80% 10%, rgba(255,59,48,.18), transparent 55%),
+        radial-gradient(1100px 700px at 60% 90%, rgba(255,59,48,.10), transparent 65%),
+        linear-gradient(180deg, #07080a 0%, #050507 100%);
+      filter:saturate(1.05);
+    }
+    .grain{
+      position:fixed; inset:0;
+      z-index:-1;
+      pointer-events:none;
+      opacity:.16;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      mix-blend-mode:overlay;
+    }
+
+    a{color:inherit}
+    .wrap{max-width:1120px;margin:0 auto;padding:22px 16px 70px}
+
+    /* ====== TOPBAR (металлическая) ====== */
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px 14px;
+      border-radius:var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      box-shadow:var(--shadow);
+      position:sticky; top:12px;
+      backdrop-filter: blur(10px);
+      z-index:20;
+    }
+
+    .brand{display:flex;align-items:center;gap:12px}
+    .logoBox{
+      width:42px;height:42px;border-radius:14px;
+      background:
+        radial-gradient(18px 18px at 25% 25%, rgba(255,176,32,.55), transparent 60%),
+        radial-gradient(18px 18px at 75% 35%, rgba(255,59,48,.45), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: var(--glow-amber);
+    }
+    .brand strong{letter-spacing:.4px}
+    .brand .sub{font-size:12.5px;color:var(--muted)}
+    .nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .chip{
+      font-size:13px;padding:8px 10px;border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;background:rgba(0,0,0,.12);
+      text-decoration:none;
+    }
+    .chip:hover{border-color:rgba(255,255,255,.22)}
+
+    /* ====== HERO BANNER ====== */
+    .heroBanner{
+      margin-top:14px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.12);
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      background: #0a0b0e;
+      position:relative;
+    }
+    .heroBanner::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(700px 240px at 10% 80%, rgba(255,59,48,.20), transparent 55%),
+        radial-gradient(700px 260px at 85% 30%, rgba(255,176,32,.18), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.65));
+      pointer-events:none;
+    }
+    .heroBannerImg{
+      width:100%;
+      height:340px;
+      object-fit:cover;
+      display:block;
+      filter: contrast(1.05) saturate(1.08);
+    }
+    @media (max-width: 920px){
+      .heroBannerImg{height:280px}
+    }
+
+    /* Лого поверх баннера */
+    .heroOverlay{
+      position:absolute; inset:0;
+      display:flex; align-items:flex-end;
+      padding:18px;
+      z-index:2;
+    }
+    .heroOverlayInner{
+      width:100%;
+      display:flex; align-items:flex-end; justify-content:space-between; gap:14px;
+      flex-wrap:wrap;
+    }
+    .heroTitleBox{
+      display:flex; flex-direction:column; gap:8px;
+      max-width:760px;
+    }
+    .heroTitle{
+      margin:0;
+      font-size:34px;
+      line-height:1.05;
+      letter-spacing:.2px;
+      text-shadow: 0 18px 45px rgba(0,0,0,.7);
+    }
+    .heroSubtitle{
+      margin:0;
+      color:rgba(243,244,246,.86);
+      text-shadow: 0 18px 45px rgba(0,0,0,.7);
+    }
+    .heroPills{display:flex;gap:8px;flex-wrap:wrap}
+    .pill{
+      font-size:12px; padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+      color: rgba(243,244,246,.86);
+      backdrop-filter: blur(8px);
+    }
+    .pill.red{border-color: rgba(255,59,48,.35)}
+    .pill.amber{border-color: rgba(255,176,32,.32)}
+
+    .heroActions{display:flex;gap:10px;flex-wrap:wrap}
+
+    /* ====== BUTTONS ====== */
+    .btn{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      color:var(--text);
+      padding:12px 14px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:750;
+      letter-spacing:.2px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease, box-shadow .12s ease;
+      backdrop-filter: blur(8px);
+    }
+    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.26)}
+    .btnRed{
+      border-color: rgba(255,59,48,.40);
+      background: linear-gradient(180deg, rgba(255,59,48,.18), rgba(0,0,0,.20));
+      box-shadow: var(--glow-red);
+    }
+    .btnRed:hover{border-color: rgba(255,59,48,.70)}
+    .btnAmber{
+      border-color: rgba(255,176,32,.40);
+      background: linear-gradient(180deg, rgba(255,176,32,.16), rgba(0,0,0,.20));
+      box-shadow: var(--glow-amber);
+    }
+    .btnAmber:hover{border-color: rgba(255,176,32,.70)}
+
+    /* ====== CONTENT CARDS ====== */
+    .grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: 1.35fr .85fr;
+      gap:14px;
+    }
+    @media (max-width: 920px){ .grid{grid-template-columns:1fr} }
+
+    .card{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-1px;
+      background: radial-gradient(700px 260px at 15% 20%, rgba(255,176,32,.10), transparent 60%),
+                  radial-gradient(700px 260px at 85% 20%, rgba(255,59,48,.10), transparent 60%);
+      pointer-events:none;
+      opacity:.7;
+    }
+    .inner{position:relative; padding:18px}
+    .sectionTitle{margin:0 0 8px; font-size:18px; letter-spacing:.2px}
+    .muted{color:var(--muted)}
+    .hr{height:1px;background:rgba(255,255,255,.10);margin:10px 0}
+
+    .list{padding:0;margin:0;list-style:none;display:grid;gap:10px}
+    .li{
+      padding:12px 14px;border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;background:rgba(0,0,0,.18);
+      color:var(--muted);
+    }
+    .li b{color:var(--text)}
+    .note{
+      margin-top:10px;
+      color:rgba(243,244,246,.82);
+      font-size:13px;
+    }
+    .price{
+      display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
+      padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(450px 200px at 20% 20%, rgba(255,176,32,.14), transparent 60%),
+        radial-gradient(450px 220px at 80% 20%, rgba(255,59,48,.14), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.25), rgba(255,255,255,.02));
+    }
+    .price .big{font-size:28px;font-weight:900;letter-spacing:.2px}
+    .price small{color:rgba(243,244,246,.75)}
+
+    /* ====== MODAL ====== */
+    .modalOverlay{
+      position:fixed; inset:0; background: rgba(0,0,0,.75);
+      display:none; align-items:center; justify-content:center;
+      padding:18px; z-index:50;
+    }
+    .modal{
+      width:min(760px, 100%);
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(700px 280px at 20% 20%, rgba(255,176,32,.16), transparent 60%),
+        radial-gradient(700px 280px at 85% 20%, rgba(255,59,48,.16), transparent 60%),
+        linear-gradient(180deg, rgba(14,15,18,.98), rgba(8,9,11,.98));
+      box-shadow: 0 35px 90px rgba(0,0,0,.75);
+      overflow:hidden;
+    }
+    .modalHead{
+      padding:16px 18px;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .modalHead h3{margin:0;font-size:18px}
+    .closeBtn{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      border-radius:12px;
+      padding:10px 12px;
+      cursor:pointer;
+    }
+    .modalBody{padding:16px 18px}
+    .steps{display:grid; gap:10px; margin-top:10px}
+    .step{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      background: rgba(0,0,0,.18);
+      padding:12px 14px;
+    }
+    .stepTitle{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .stepTitle b{font-size:14px}
+    .tag{
+      font-size:12px; padding:5px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      color:rgba(243,244,246,.78);
+      background:rgba(0,0,0,.22);
+    }
+    .downloadBox{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px dashed rgba(255,255,255,.22);
+      background: rgba(0,0,0,.18);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      flex-wrap:wrap;
+    }
+    .fineprint{color:rgba(243,244,246,.72); font-size:12.5px; margin-top:10px}
+
+    /* ====== CONTACT CARDS (всплывающие) ====== */
+    .contactCards{display:grid;grid-template-columns: repeat(3,1fr); gap:12px}
+    @media (max-width: 900px){ .contactCards{grid-template-columns:1fr} }
+    .contactCard{
+      padding:14px;border-radius:18px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      cursor:pointer;
+      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+    }
+    .contactCard:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.22);
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+    }
+    .contactCard .t{font-weight:850}
+    .contactCard .d{color:rgba(243,244,246,.76); font-size:13px; margin-top:4px}
+
+    /* ====== TOAST ====== */
+    .toast{
+      position:fixed; left:50%; bottom:18px; transform: translateX(-50%);
+      background: rgba(10,11,14,.95);
+      border:1px solid rgba(255,255,255,.14);
+      padding:10px 12px; border-radius:14px; color:var(--text);
+      display:none; z-index:60;
+      box-shadow: 0 20px 70px rgba(0,0,0,.65);
+      max-width: min(760px, 92vw);
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: rgba(243,244,246,.78);
+    }
+    footer{margin-top:12px;color:rgba(243,244,246,.70);font-size:12.5px}
+
+    .logoImg{
+  height:88px;
+  width:auto;
+  display:block;
+  filter:
+    drop-shadow(0 0 6px rgba(255,59,48,.45))
+    drop-shadow(0 10px 30px rgba(0,0,0,.65));
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="backdrop"></div>
+  <div class="grain"></div>
+
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <img src="logo.png" alt="Vishes CRMP Collection" class="logoImg">
+        <div>
+          <strong>Vishes • CRMP Collection</strong><br>
+          <span class="sub">Amazing RP • сборка • апдейты</span>
+        </div>
+      </div>
+      <div class="nav">
+        <a class="chip" href="#about">О сборке</a>
+        <a class="chip" href="#updates">Обновления</a>
+        <a class="chip" href="#download">Скачать</a>
+        <a class="chip" href="#contacts">Контакты</a>
+      </div>
+    </div>
+
+    <!-- HERO BANNER -->
+    <section class="heroBanner" id="download">
+      <img class="heroBannerImg" id="bannerImg" alt="Vishes Amazing RP banner" src="">
+      <div class="heroOverlay">
+        <div class="heroOverlayInner">
+          <div class="heroTitleBox">
+            <h1 class="heroTitle">Сборка под Amazing RP</h1>
+            <p class="heroSubtitle">Стабильность • FPS • правильные настройки • приятный визуал</p>
+            <div class="heroPills">
+              <span class="pill red">CRMP</span>
+              <span class="pill amber">Amazing RP</span>
+              <span class="pill">обновления</span>
+              <span class="pill">поддержка</span>
+            </div>
+          </div>
+
+          <div class="heroActions">
+            <button class="btn btnRed" id="openDownload">⬇️ Скачать сборку</button>
+            <a class="btn btnAmber" id="donateBtn" href="#" target="_blank" rel="noopener">☕ Поддержать</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" id="about">
+      <div class="card">
+        <div class="inner">
+          <p class="sectionTitle">Что внутри</p>
+          <p class="muted">
+            Это сборка “под проект”: всё подобрано и уложено так, чтобы было комфортно играть
+            именно в <b>Amazing RP</b> — без мусора, конфликтов и лишней возни.
+          </p>
+
+          <div class="hr"></div>
+          <ul class="list">
+            <li class="li"><b>Стабильность:</b> порядок, совместимость, меньше багов/вылетов.</li>
+            <li class="li"><b>FPS:</b> оптимизация и настройки для нормальной производительности.</li>
+            <li class="li"><b>Визуал:</b> аккуратный “вайб” без перегруза.</li>
+            <li class="li"><b>Инструкция:</b> понятно, без “угадай сам”.</li>
+          </ul>
+
+          <p class="note">
+            Донат добровольный. Если сборка тебе реально экономит время — поддержи разработку.
+            <b>Рекомендация: 100₽</b> (на кофе и будущие апдейты).
+          </p>
+        </div>
+      </div>
+
+      <aside class="card">
+        <div class="inner">
+          <div class="price">
+            <div>
+              <div style="font-size:13px;color:rgba(243,244,246,.74)">Рекомендуемая поддержка</div>
+              <div class="big">100 ₽</div>
+              <small>кофе + мотивация пилить обновления</small>
+            </div>
+            <div style="text-align:right">
+              <div class="pill">добровольно</div>
+              <div style="height:8px"></div>
+              <div class="pill">без подписок</div>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+          <p class="sectionTitle">Быстрые действия</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btnRed" id="openDownload2">Скачать</button>
+            <a class="btn btnAmber" id="donateBtn2" href="#" target="_blank" rel="noopener">Поддержать</a>
+            <a class="btn" href="#updates">Чейнджлог</a>
+          </div>
+
+          <p class="fineprint">
+            Если сейчас не до доната — скачай и так. Если будет возможность — поддержишь позже.
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="card" id="updates" style="margin-top:14px">
+      <div class="inner">
+        <p class="sectionTitle">Обновления (чейнджлог)</p>
+        <p class="muted">Добавляй версии сюда — людям важно видеть движение проекта.</p>
+        <div class="hr"></div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="stepTitle">
+              <b>v1.0</b>
+              <span class="tag">пример</span>
+            </div>
+            <div class="muted" style="margin-top:6px">
+              • базовая оптимизация<br/>
+              • порядок модов, фиксы конфликтов<br/>
+              • инструкция
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="stepTitle">
+              <b>v1.1</b>
+              <span class="tag">пример</span>
+            </div>
+            <div class="muted" style="margin-top:6px">
+              • обновлены настройки под Amazing RP<br/>
+              • меньше вылетов при запуске<br/>
+              • улучшена совместимость
+            </div>
+          </div>
+        </div>
+
+        <p class="fineprint">
+          Формула хорошего чейнджлога: <span class="kbd">3–7 пунктов</span>, коротко, честно.
+        </p>
+      </div>
+    </section>
+
+    <section class="card" id="contacts" style="margin-top:14px">
+      <div class="inner">
+        <p class="sectionTitle">Контакты</p>
+        <p class="muted">Нажми на карточку — данные всплывут. Повторный клик — копирование.</p>
+
+        <div class="hr"></div>
+
+        <div class="contactCards">
+          <div class="contactCard" data-reveal="TG: @Qweaws">
+            <div class="t">Telegram</div>
+            <div class="d">нажми, чтобы показать</div>
+          </div>
+
+          <div class="contactCard" data-reveal="VK: https://vk.com/chipixer">
+            <div class="t">VK</div>
+            <div class="d">нажми, чтобы показать</div>
+          </div>
+
+          <div class="contactCard" data-reveal="Email: apache00112@gmail.com">
+            <div class="t">Email</div>
+            <div class="d">нажми, чтобы показать</div>
+          </div>
+        </div>
+
+        <footer>
+          <div class="hr"></div>
+          <div>
+            Мягкий, но сильный посыл (без “продажности”): <span class="kbd">“поддержка = больше обновлений”</span>.
+          </div>
+        </footer>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modalOverlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modalHead">
+        <div>
+          <h3 id="modalTitle">Скачать сборку</h3>
+          <div class="muted" style="font-size:13px;margin-top:4px">
+            Донат добровольный — но он реально ускоряет апдейты и фиксы.
+          </div>
+        </div>
+        <button class="closeBtn" id="closeModal">Закрыть</button>
+      </div>
+
+      <div class="modalBody">
+        <div class="steps">
+          <div class="step">
+            <div class="stepTitle">
+              <b>Шаг 1 — поддержка (100₽ рекомендуем)</b>
+              <span class="tag">опционально</span>
+            </div>
+            <div class="muted" style="margin-top:6px">
+              Если сборка тебе зашла — поддержи разработку. Это помогает выпускать обновления чаще.
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+              <a class="btn btnAmber" id="donateBtn3" href="#" target="_blank" rel="noopener">☕ Поддержать</a>
+              <button class="btn" id="copyDonate">Скопировать ссылку доната</button>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="stepTitle">
+              <b>Шаг 2 — скачать</b>
+              <span class="tag">сразу</span>
+            </div>
+            <div class="downloadBox">
+              <div>
+                <div style="font-weight:850">Архив сборки</div>
+                <div class="muted" style="font-size:13px;margin-top:2px">Скачивание начнётся по кнопке</div>
+              </div>
+              <a class="btn btnRed" id="downloadLink" href="#" download>⬇️ Скачать</a>
+              <button class="btn" id="copyLink">Скопировать ссылку</button>
+            </div>
+            <div class="fineprint">
+              *Нужна установленная GTA San Andreas (легальная копия). Сборка — моды/настройки/инструкция.
+            </div>
+          </div>
+        </div>
+
+        <div class="fineprint" style="margin-top:12px">
+          Горячая клавиша: <span class="kbd">Esc</span> — закрыть окно.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ====== ПОДСТАВЬ СЮДА СВОИ ФАЙЛЫ/ССЫЛКИ ======
+    const ASSETS = {
+      bannerUrl: "banner.png", // ← сюда вставь путь/URL к баннеру (который я сделал)
+    };
+
+    const SETTINGS = {
+      donationUrl: "https://yoomoney.ru/to/4100118854894458",        // ← вставь YooMoney / DonationAlerts / Boosty / CloudTips и т.д.
+      buildArchiveUrl: "https://drive.google.com/drive/folders/1NFms6kS5qTgCcwVJFyewdmlwyabDp77F?usp=drive_link"  // ← прямая ссылка на архив (например, Я.Диск/Гугл.Диск/хостинг)
+    };
+
+    const $ = (sel) => document.querySelector(sel);
+
+    // Banner
+    const banner = $("#bannerImg");
+    banner.src = ASSETS.bannerUrl;
+
+    const modalOverlay = $("#modalOverlay");
+    const toast = $("#toast");
+
+    function showToast(text){
+      toast.textContent = text;
+      toast.style.display = "block";
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toast.style.display = "none", 2400);
+    }
+
+    function openModal(){
+      modalOverlay.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
+    function closeModal(){
+      modalOverlay.style.display = "none";
+      document.body.style.overflow = "";
+    }
+
+    function applySettings(){
+      ["#donateBtn","#donateBtn2","#donateBtn3"].forEach(id=>{
+        const el = $(id);
+        if(el) el.href = SETTINGS.donationUrl;
+      });
+      const dl = $("#downloadLink");
+      if(dl) dl.href = SETTINGS.buildArchiveUrl;
+    }
+    applySettings();
+
+    $("#openDownload").addEventListener("click", openModal);
+    $("#openDownload2").addEventListener("click", openModal);
+
+    $("#closeModal").addEventListener("click", closeModal);
+    modalOverlay.addEventListener("click", (e)=>{
+      if(e.target === modalOverlay) closeModal();
+    });
+    window.addEventListener("keydown", (e)=>{
+      if(e.key === "Escape") closeModal();
+    });
+
+    $("#copyDonate").addEventListener("click", async ()=>{
+      try{
+        await navigator.clipboard.writeText(SETTINGS.donationUrl);
+        showToast("Ссылка доната скопирована ✅");
+      }catch{
+        showToast("Не удалось скопировать (браузер запретил).");
+      }
+    });
+
+    $("#copyLink").addEventListener("click", async ()=>{
+      try{
+        await navigator.clipboard.writeText(SETTINGS.buildArchiveUrl);
+        showToast("Ссылка на архив скопирована ✅");
+      }catch{
+        showToast("Не удалось скопировать (браузер запретил).");
+      } 
+    });
+
+    document.querySelectorAll(".contactCard").forEach(card=>{
+      card.addEventListener("click", async ()=>{
+        const data = card.getAttribute("data-reveal");
+        card.querySelector(".d").textContent = data;
+        showToast("Показано. Нажми ещё раз — скопируем.");
+        if(card._revealed){
+          try{
+            await navigator.clipboard.writeText(data);
+            showToast("Скопировано ✅");
+          }catch{
+            showToast("Не удалось скопировать.");
+          }
+        }
+        card._revealed = true;
+      });
+    });
+  </script>
+</body>
+</html>
